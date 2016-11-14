@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import android.view.ViewGroup;
 
@@ -54,6 +55,13 @@ public class ViewTripFragment extends Fragment {
         trips.add("Trip 2");
         trips.add("Trip 3");
 
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                getActivity().getApplicationContext(),
+                R.layout.layout_trip_number,
+                R.id.tripNumberTextId,
+                trips);
+
+        tripsList.setAdapter(arrayAdapter);
         return view;
     }
 
