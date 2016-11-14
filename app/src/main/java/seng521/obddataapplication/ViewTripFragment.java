@@ -9,8 +9,12 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.content.Intent;
 
 import android.view.ViewGroup;
+
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import java.util.ArrayList;
 
@@ -62,9 +66,22 @@ public class ViewTripFragment extends Fragment {
                 trips);
 
         tripsList.setAdapter(arrayAdapter);
+
+        tripsList.setOnItemClickListener(new OnItemClickListener()
+            {
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+                    {
+
+                        TextView textView = (TextView) view.findViewById(R.id.tripNumberTextId);
+                        String selectedValue = textView.getText().toString();
+                        Intent intent = new Intent(getActivity().getApplicationContext(), ViewTripDataActivity.class);
+                        intent.putExtra("selectedValue ", selectedValue);
+                        startActivity(intent);
+                    }
+            });
+
         return view;
     }
-
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

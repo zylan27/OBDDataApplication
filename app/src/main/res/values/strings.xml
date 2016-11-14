@@ -14,7 +14,8 @@
 
     <!-- Strings related to main activity -->
     <string name="start_record"> Start Trip</string>>
-    <string name="end_record"> End Trip</string>>
+    <string name="end_record"> End Trip</string>
+    <string name="title_activity_view_trip_data">Trip Data</string>>
 
 
 </resources>
