@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +62,14 @@ public class ManageTripFragment extends Fragment {
                 manageRecordTrip(view);
             }
         });
+
+
+        TextView vehicleIdMessage = (TextView) view.findViewById(R.id.vehicleIdMessageId);
+
+        String message = new String("Recording Data For Vehicle ID: ");
+        message = message + getActivity().getIntent().getStringExtra("vehicleId");
+
+        vehicleIdMessage.setText(message);
         return view;
     }
 

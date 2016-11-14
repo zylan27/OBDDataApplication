@@ -20,10 +20,6 @@ import android.widget.Button;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -192,6 +188,8 @@ public class LoginActivity extends AppCompatActivity {
 
             if (success) {
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                intent.putExtra("vehicleId", mVehicleId);
+
                 startActivity(intent);
                 finish();
 
