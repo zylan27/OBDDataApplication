@@ -4,11 +4,21 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import retrofit2.Response;
+import retrofit2.Retrofit;
+//import retrofit2.Callback;
+import retrofit2.Call;
+import okhttp3.ResponseBody;
+import retrofit2.Callback;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -111,6 +121,8 @@ public class ManageTripFragment extends Fragment {
         void onManageTripInteraction(Uri uri);
     }
 
+    private static final String BASE_URL = "http://10.0.2.2:3000";
+
     private void manageRecordTrip(View view)
     {
         if(started)
@@ -118,11 +130,62 @@ public class ManageTripFragment extends Fragment {
             started = !started;
             setRecordText(view, getString(R.string.start_record));
 
+            //End Trip
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .build();
+
+            OBDServerAPI apiService = retrofit.create(OBDServerAPI.class);
+            Call<ResponseBody> endResponse = apiService.endTrip();
+            endResponse.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    // use response.code, response.headers, etc.
+                    Log.d("myTag", "Success ON END");
+
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    // handle failure
+                    Log.d("myTag", "FAILED ON END");
+                    String message = t.getMessage();
+                    Log.d("failure", message);
+
+                }
+            });
+
         }
         else
         {
             started = !started;
             setRecordText(view, getString(R.string.end_record));
+
+            //Start trip
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            OBDServerAPI apiService = retrofit.create(OBDServerAPI.class);
+            Call<ResponseBody> startReqeust = apiService.startTrip();
+            startReqeust.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    // use response.code, response.headers, etc.
+                    Log.d("myTag", "Success ON START");
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    // handle failure
+                    Log.d("myTag", "FAILED ON START");
+                    String message = t.getMessage();
+                    Log.d("failure", message);
+
+                }
+            });
+
         }
     }
 
