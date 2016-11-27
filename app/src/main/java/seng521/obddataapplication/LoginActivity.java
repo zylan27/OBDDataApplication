@@ -103,8 +103,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isVehicleIdValid(String vehicleId) {
         //TODO: Replace this with your own logic
-        //return vehicleId.length() > 4;
-        return true;
+
+        if (Integer.valueOf(vehicleId) == 1)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     /**
