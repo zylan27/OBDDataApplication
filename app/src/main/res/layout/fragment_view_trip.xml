@@ -5,8 +5,21 @@
     tools:context="seng521.obddataapplication.ViewTripFragment">
 
 
-    <ListView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/tripsListId" />
+        android:layout_height="match_parent">
+
+        <Button
+            android:text="Refresh Trips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/refreshTripsButtonId" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/tripsListId" />
+    </LinearLayout>
+
 </FrameLayout>

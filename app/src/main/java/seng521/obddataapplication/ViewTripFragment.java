@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.content.Intent;
@@ -64,75 +65,15 @@ public class ViewTripFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_view_trip, container, false);
 
-        ListView tripsList = (ListView) view.findViewById(R.id.tripsListId);
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        OBDServerAPI apiService = retrofit.create(OBDServerAPI.class);
-        Call<List<Trip>> getTrips = apiService.getTrips();
-
-        ArrayList litripsArrayListst;
-
-        getTrips.enqueue(new Callback<List<Trip>>() {
+        Button refreshTripsButton = (Button) view.findViewById(R.id.refreshTripsButtonId);
+        refreshTripsButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<List<Trip>> call, Response<List<Trip> > response) {
-                // use response.code, response.headers, etc.
-                Log.d("myTag", "Start Trip: Success");
-
-                List<Trip> trips = response.body();
-
-                for(int i = 0; i < trips.size(); i++) {
-                    Log.d("myTag", "Printing Trips");
-                    Log.d("myTag", trips.toString());
-                }
-
-
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Trip>> call, Throwable t) {
-                // handle failure
-                Log.d("myTag", "Get Trips: Failed");
-                String message = t.getMessage();
-                Log.d("Failure", message);
-
+            public void onClick(View view) {
+                refreshTrips(view);
             }
         });
 
-
-
-//        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-//                getActivity().getApplicationContext(),
-//                R.layout.layout_trip_number,
-//                R.id.tripNumberTextId,
-//                trips);
-//
-//        tripsList.setAdapter(arrayAdapter);
-//
-//        tripsList.setOnItemClickListener(new OnItemClickListener()
-//            {
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-//                    {
-//
-//                        TextView textView = (TextView) view.findViewById(R.id.tripNumberTextId);
-//                        String selectedValue = textView.getText().toString();
-//                        Intent intent = new Intent(getActivity().getApplicationContext(), ViewTripDataActivity.class);
-//                        intent.putExtra("selectedValue ", selectedValue);
-//                        startActivity(intent);
-//                    }
-//            });
-
         return view;
-    }
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onViewTripInteraction(uri);
-        }
     }
 
     @Override
@@ -164,5 +105,68 @@ public class ViewTripFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void onViewTripInteraction(Uri uri);
+    }
+
+    private void refreshTrips(View view)
+    {
+
+        ListView tripsList = (ListView) view.findViewById(R.id.tripsListId);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        OBDServerAPI apiService = retrofit.create(OBDServerAPI.class);
+        Call<List<Trip>> getTrips = apiService.getTrips();
+
+        ArrayList litripsArrayListst;
+
+        getTrips.enqueue(new Callback<List<Trip>>() {
+            @Override
+            public void onResponse(Call<List<Trip>> call, Response<List<Trip> > response) {
+                // use response.code, response.headers, etc.
+                Log.d("myTag", "Get Trips: Success");
+
+                List<Trip> trips = response.body();
+
+                for(int i = 0; i < trips.size(); i++) {
+                    Log.d("myTag", "Printing Trips");
+                    Log.d("myTag", trips.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Trip>> call, Throwable t) {
+                // handle failure
+                Log.d("myTag", "Get Trips: Failed");
+                String message = t.getMessage();
+                Log.d("Failure", message);
+
+            }
+        });
+
+
+//        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+//                getActivity().getApplicationContext(),
+//                R.layout.layout_trip_number,
+//                R.id.tripNumberTextId,
+//                trips);
+//
+//        tripsList.setAdapter(arrayAdapter);
+//
+//        tripsList.setOnItemClickListener(new OnItemClickListener()
+//            {
+//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+//                    {
+//
+//                        TextView textView = (TextView) view.findViewById(R.id.tripNumberTextId);
+//                        String selectedValue = textView.getText().toString();
+//                        Intent intent = new Intent(getActivity().getApplicationContext(), ViewTripDataActivity.class);
+//                        intent.putExtra("selectedValue ", selectedValue);
+//                        startActivity(intent);
+//                    }
+//            });
+
     }
 }
