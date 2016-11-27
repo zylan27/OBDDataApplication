@@ -141,16 +141,16 @@ public class ManageTripFragment extends Fragment {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     // use response.code, response.headers, etc.
-                    Log.d("myTag", "Success ON END");
+                    Log.d("myTag", "End Trip: Success");
 
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     // handle failure
-                    Log.d("myTag", "FAILED ON END");
+                    Log.d("myTag", "End Trip: Failed");
                     String message = t.getMessage();
-                    Log.d("failure", message);
+                    Log.d("Failure", message);
 
                 }
             });
@@ -173,15 +173,15 @@ public class ManageTripFragment extends Fragment {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     // use response.code, response.headers, etc.
-                    Log.d("myTag", "Success ON START");
+                    Log.d("myTag", "Start Trip: Success");
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     // handle failure
-                    Log.d("myTag", "FAILED ON START");
+                    Log.d("myTag", "Start Trip: Failed");
                     String message = t.getMessage();
-                    Log.d("failure", message);
+                    Log.d("Failure", message);
 
                 }
             });
