@@ -24,6 +24,11 @@ public class Trip {
         this.inProgress = inProgress;
     }
 
+    public String toString()
+    {
+        String string = "ID: " + _id;
 
+        return string;
+    }
 
 }

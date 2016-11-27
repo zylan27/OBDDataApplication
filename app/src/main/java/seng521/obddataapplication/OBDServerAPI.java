@@ -23,10 +23,10 @@ public interface OBDServerAPI {
     Call<ResponseBody> endTrip();
 
     @GET("/trips")
-    void getTrips(Callback<List<Trip>> trips);
+    Call<List<Trip>> getTrips();
 
     @GET("/trip")
-    void getTrip(@Query("tripID") String tripId, Callback<Trip> trip);
+    Call<Trip> getTrip(@Query("tripID") String tripId);
 
     @POST("/addPhoneRecords")
     Call<ResponseBody> addRecord(@Body Trip trip);

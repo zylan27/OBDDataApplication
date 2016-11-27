@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -17,6 +18,14 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,6 +55,8 @@ public class ViewTripFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    private static final String BASE_URL = "http://10.0.2.2:3000";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -55,30 +66,65 @@ public class ViewTripFragment extends Fragment {
 
         ListView tripsList = (ListView) view.findViewById(R.id.tripsListId);
 
-        trips.add("Trip 1");
-        trips.add("Trip 2");
-        trips.add("Trip 3");
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                getActivity().getApplicationContext(),
-                R.layout.layout_trip_number,
-                R.id.tripNumberTextId,
-                trips);
+        OBDServerAPI apiService = retrofit.create(OBDServerAPI.class);
+        Call<List<Trip>> getTrips = apiService.getTrips();
 
-        tripsList.setAdapter(arrayAdapter);
+        ArrayList litripsArrayListst;
 
-        tripsList.setOnItemClickListener(new OnItemClickListener()
-            {
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-                    {
+        getTrips.enqueue(new Callback<List<Trip>>() {
+            @Override
+            public void onResponse(Call<List<Trip>> call, Response<List<Trip> > response) {
+                // use response.code, response.headers, etc.
+                Log.d("myTag", "Start Trip: Success");
 
-                        TextView textView = (TextView) view.findViewById(R.id.tripNumberTextId);
-                        String selectedValue = textView.getText().toString();
-                        Intent intent = new Intent(getActivity().getApplicationContext(), ViewTripDataActivity.class);
-                        intent.putExtra("selectedValue ", selectedValue);
-                        startActivity(intent);
-                    }
-            });
+                List<Trip> trips = response.body();
+
+                for(int i = 0; i < trips.size(); i++) {
+                    Log.d("myTag", "Printing Trips");
+                    Log.d("myTag", trips.toString());
+                }
+
+
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Trip>> call, Throwable t) {
+                // handle failure
+                Log.d("myTag", "Get Trips: Failed");
+                String message = t.getMessage();
+                Log.d("Failure", message);
+
+            }
+        });
+
+
+
+//        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+//                getActivity().getApplicationContext(),
+//                R.layout.layout_trip_number,
+//                R.id.tripNumberTextId,
+//                trips);
+//
+//        tripsList.setAdapter(arrayAdapter);
+//
+//        tripsList.setOnItemClickListener(new OnItemClickListener()
+//            {
+//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+//                    {
+//
+//                        TextView textView = (TextView) view.findViewById(R.id.tripNumberTextId);
+//                        String selectedValue = textView.getText().toString();
+//                        Intent intent = new Intent(getActivity().getApplicationContext(), ViewTripDataActivity.class);
+//                        intent.putExtra("selectedValue ", selectedValue);
+//                        startActivity(intent);
+//                    }
+//            });
 
         return view;
     }
