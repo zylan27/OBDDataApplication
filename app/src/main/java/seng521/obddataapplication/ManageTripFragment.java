@@ -168,8 +168,8 @@ public class ManageTripFragment extends Fragment {
                     .build();
 
             OBDServerAPI apiService = retrofit.create(OBDServerAPI.class);
-            Call<ResponseBody> startReqeust = apiService.startTrip();
-            startReqeust.enqueue(new Callback<ResponseBody>() {
+            Call<ResponseBody> startRequest = apiService.startTrip();
+            startRequest.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     // use response.code, response.headers, etc.
