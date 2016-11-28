@@ -7,6 +7,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -25,8 +27,17 @@ public interface OBDServerAPI {
     @GET("/trips")
     Call<List<Trip>> getTrips();
 
+
+    @Headers({"type: phone"})
     @GET("/trip")
-    Call<Trip> getTrip(@Query("tripID") String tripId);
+    Call<List<RecordedData>> getPhoneData(@Header("tripID") String tripID);
+
+
+    @Headers({"type: OBD"})
+    @GET("/trip")
+    Call<List<ObdData>> getObdData(@Query("tripID") String tripId);
+
+
 
     @POST("/addPhoneRecords")
     Call<ResponseBody> addRecord(@Body Trip trip);

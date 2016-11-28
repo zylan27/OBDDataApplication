@@ -110,7 +110,6 @@ public class ViewTripsFragment extends Fragment {
 
     private void refreshTrips(View view)
     {
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
