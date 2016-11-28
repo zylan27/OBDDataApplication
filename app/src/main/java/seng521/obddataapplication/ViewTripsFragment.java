@@ -1,16 +1,20 @@
 package seng521.obddataapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,12 +55,16 @@ public class ViewTripsFragment extends Fragment {
 
     private static final String BASE_URL = "http://10.0.2.2:3000";
 
+    private ListView tripsList;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_view_trip, container, false);
+
+        tripsList = (ListView) view.findViewById(R.id.tripsListId);
 
         Button refreshTripsButton = (Button) view.findViewById(R.id.refreshTripsButtonId);
         refreshTripsButton.setOnClickListener(new View.OnClickListener() {
@@ -103,8 +111,6 @@ public class ViewTripsFragment extends Fragment {
     private void refreshTrips(View view)
     {
 
-        ListView tripsList = (ListView) view.findViewById(R.id.tripsListId);
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -113,7 +119,6 @@ public class ViewTripsFragment extends Fragment {
         OBDServerAPI apiService = retrofit.create(OBDServerAPI.class);
         Call<List<Trip>> getTrips = apiService.getTrips();
 
-        ArrayList litripsArrayListst;
 
         getTrips.enqueue(new Callback<List<Trip>>() {
             @Override
@@ -125,6 +130,29 @@ public class ViewTripsFragment extends Fragment {
 
                 Log.d("myTag", "Printing Trips");
                 Log.d("myTag", trips.toString());
+
+                ArrayAdapter<Trip> arrayAdapter = new ArrayAdapter<Trip>(
+                        getActivity().getApplicationContext(),
+                        R.layout.layout_trip_number,
+                        R.id.tripNumberTextId,
+                        trips);
+
+                tripsList.setAdapter(arrayAdapter);
+
+                tripsList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+                    {
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+                            {
+
+                                TextView textView = (TextView) view.findViewById(R.id.tripNumberTextId);
+                                String selectedValue = textView.getText().toString();
+                                Log.d("myTag", "printing selected item text");
+                                Log.d("myTag", selectedValue);
+                                Intent intent = new Intent(getActivity().getApplicationContext(), ViewTripDataActivity.class);
+                                intent.putExtra("selectedValue ", selectedValue);
+                                startActivity(intent);
+                            }
+                    });
             }
 
             @Override
@@ -138,26 +166,6 @@ public class ViewTripsFragment extends Fragment {
         });
 
 
-//        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-//                getActivity().getApplicationContext(),
-//                R.layout.layout_trip_number,
-//                R.id.tripNumberTextId,
-//                trips);
-//
-//        tripsList.setAdapter(arrayAdapter);
-//
-//        tripsList.setOnItemClickListener(new OnItemClickListener()
-//            {
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-//                    {
-//
-//                        TextView textView = (TextView) view.findViewById(R.id.tripNumberTextId);
-//                        String selectedValue = textView.getText().toString();
-//                        Intent intent = new Intent(getActivity().getApplicationContext(), ViewTripDataActivity.class);
-//                        intent.putExtra("selectedValue ", selectedValue);
-//                        startActivity(intent);
-//                    }
-//            });
 
     }
 }
