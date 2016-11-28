@@ -110,7 +110,6 @@ public class ViewTripsFragment extends Fragment {
 
     private void refreshTrips(View view)
     {
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -126,7 +125,7 @@ public class ViewTripsFragment extends Fragment {
                 // use response.code, response.headers, etc.
                 Log.d("myTag", "Get Trips: Success");
 
-                List<Trip> trips = response.body();
+                final List<Trip> trips = response.body();
 
                 Log.d("myTag", "Printing Trips");
                 Log.d("myTag", trips.toString());
@@ -143,13 +142,12 @@ public class ViewTripsFragment extends Fragment {
                     {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
                             {
-
-                                TextView textView = (TextView) view.findViewById(R.id.tripNumberTextId);
-                                String selectedValue = textView.getText().toString();
-                                Log.d("myTag", "printing selected item text");
-                                Log.d("myTag", selectedValue);
+                                Trip trip = trips.get(position);
                                 Intent intent = new Intent(getActivity().getApplicationContext(), ViewTripDataActivity.class);
-                                intent.putExtra("selectedValue ", selectedValue);
+                                intent.putExtra("tripId", trip.getId());
+                                intent.putExtra("startTime", trip.getStartTime());
+                                intent.putExtra("endTime", trip.getEndTime());
+
                                 startActivity(intent);
                             }
                     });

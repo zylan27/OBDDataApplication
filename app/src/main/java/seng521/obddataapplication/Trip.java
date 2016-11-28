@@ -3,6 +3,8 @@ package seng521.obddataapplication;
 import java.util.Date;
 import java.util.List;
 
+import retrofit2.http.Path;
+
 /**
  * Created by ZoeyLan on 2016-11-21.
  */
@@ -31,4 +33,18 @@ public class Trip {
         return string;
     }
 
+    public String getId()
+    {
+        return _id;
+    }
+
+    public String getStartTime()
+    {
+        return startTime.toString();
+    }
+
+    public String getEndTime()
+    {
+        return endTime.toString();
+    }
 }
