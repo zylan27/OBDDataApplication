@@ -7,21 +7,14 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.content.Intent;
 
 import android.view.ViewGroup;
-
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,23 +24,23 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ViewTripFragment.OnFragmentInteractionListener} interface
+ * {@link ViewTripsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ViewTripFragment#newInstance} factory method to
+ * Use the {@link ViewTripsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewTripFragment extends Fragment {
+public class ViewTripsFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     ArrayList<String> trips = new ArrayList<String>();
 
-    public ViewTripFragment() {
+    public ViewTripsFragment() {
         // Required empty public constructor
     }
 
 
-    public static ViewTripFragment newInstance() {
-        ViewTripFragment fragment = new ViewTripFragment();
+    public static ViewTripsFragment newInstance() {
+        ViewTripsFragment fragment = new ViewTripsFragment();
         return fragment;
     }
 
@@ -130,10 +123,8 @@ public class ViewTripFragment extends Fragment {
 
                 List<Trip> trips = response.body();
 
-                for(int i = 0; i < trips.size(); i++) {
-                    Log.d("myTag", "Printing Trips");
-                    Log.d("myTag", trips.toString());
-                }
+                Log.d("myTag", "Printing Trips");
+                Log.d("myTag", trips.toString());
             }
 
             @Override

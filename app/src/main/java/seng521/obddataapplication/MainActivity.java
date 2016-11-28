@@ -13,13 +13,11 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity
         implements
         ManageTripFragment.OnFragmentInteractionListener,
-        ViewTripFragment.OnFragmentInteractionListener
+        ViewTripsFragment.OnFragmentInteractionListener
 {
 
     /**
@@ -106,7 +104,7 @@ public class MainActivity extends AppCompatActivity
                 case 0:
                     return ManageTripFragment.newInstance();
                 case 1:
-                    return ViewTripFragment.newInstance();
+                    return ViewTripsFragment.newInstance();
             }
             return null;
         }

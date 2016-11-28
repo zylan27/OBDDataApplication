@@ -26,7 +26,7 @@ public class Trip {
 
     public String toString()
     {
-        String string = "ID: " + _id;
+        String string = "ID: " + _id + "\nStart Time: " + startTime.toString() + "\nEnd Time: " + endTime.toString();
 
         return string;
     }
