@@ -56,8 +56,6 @@ public class ViewPhoneDataFragment extends Fragment {
 
     }
 
-    private static final String BASE_URL = "http://10.0.2.2:3000";
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -69,7 +67,7 @@ public class ViewPhoneDataFragment extends Fragment {
         // Display list;
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(getString(R.string.server_address))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

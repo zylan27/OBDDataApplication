@@ -53,8 +53,6 @@ public class ViewTripsFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    private static final String BASE_URL = "http://10.0.2.2:3000";
-
     private ListView tripsList;
 
     @Override
@@ -111,7 +109,7 @@ public class ViewTripsFragment extends Fragment {
     private void refreshTrips(View view)
     {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(getString(R.string.server_address))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

@@ -121,8 +121,6 @@ public class ManageTripFragment extends Fragment {
         void onManageTripInteraction(Uri uri);
     }
 
-    private static final String BASE_URL = "http://10.0.2.2:3000";
-
     private void manageRecordTrip(View view)
     {
         if(started)
@@ -132,7 +130,7 @@ public class ManageTripFragment extends Fragment {
 
             //End Trip
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(getString(R.string.server_address))
                     .build();
 
             OBDServerAPI apiService = retrofit.create(OBDServerAPI.class);
@@ -163,7 +161,7 @@ public class ManageTripFragment extends Fragment {
 
             //Start trip
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(getString(R.string.server_address))
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
