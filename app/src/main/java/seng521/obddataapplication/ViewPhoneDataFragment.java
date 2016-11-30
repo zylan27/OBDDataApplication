@@ -84,7 +84,7 @@ public class ViewPhoneDataFragment extends Fragment {
 
                 final List<RecordedData> recordedData = response.body();
 
-                Log.d("myTag", "Printing Trips");
+                Log.d("myTag", "Printing Phone Data");
                 Log.d("myTag", recordedData.toString());
 
                 ArrayAdapter<RecordedData> arrayAdapter = new ArrayAdapter<RecordedData>(
