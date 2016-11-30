@@ -10,11 +10,17 @@ import java.util.List;
 public class ObdData {
 
     private Date timestamp;
-    private List<String> errors; // y-coordinate
+    private List<String> errors;
 
     public ObdData(Date timestamp, List<String> errors) {
         this.timestamp = timestamp;
         this.errors = errors;
     }
 
+    @Override
+    public String toString() {
+        String string = "Date " + timestamp.toString()
+                +  "\n Errors: " + errors.toString();
+        return string;
+    }
 }

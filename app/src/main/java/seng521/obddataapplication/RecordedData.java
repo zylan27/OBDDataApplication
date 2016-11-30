@@ -29,4 +29,12 @@ public class RecordedData {
         this._id = _id;
     }
 
+    @Override
+    public String toString() {
+        String string = "Time: " + timestamp.toString()
+                + "\nLatitude: " + Double.toString(latitude)
+                + "\nLongitude: " + Double.toString(longitude)
+                + "\nSpeed: " + Double.toString(speed);
+        return string;
+    }
 }
