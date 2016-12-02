@@ -17,6 +17,9 @@ public class GPSLocation
     private Location previousLocation, currentLocation;
     private long previousTime, currentTime;
 
+    //Set this to true if you want dummy values instead of actual values
+    private static boolean dummyValues = false;
+
     public GPSLocation(){}
 
     public GPSLocation(Context cont,
@@ -32,14 +35,32 @@ public class GPSLocation
 
         previousTime = Calendar.getInstance().getTimeInMillis();
         currentTime = Calendar.getInstance().getTimeInMillis();
+
+        if (dummyValues)
+        {
+            currentLocation.setLatitude(51.081468);
+            currentLocation.setLongitude(-114.130640);
+        }
+        else
+        {
+            currentLocation = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient);
+        }
     };
 
     public void getLocation()
     {
         previousLocation = currentLocation;
         previousTime = currentTime;
-        currentLocation = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient);
+
         currentTime = Calendar.getInstance().getTimeInMillis();
+
+        if (dummyValues)
+        {
+            currentLocation.setLatitude(currentLocation.getLatitude() + 0.0001);
+            currentLocation.setLongitude(currentLocation.getLongitude() - 0.0001);
+        }
+
+        currentLocation = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient);
     }
 
     public double getLatitude()
