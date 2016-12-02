@@ -16,6 +16,7 @@ public class GPSLocation
     private GoogleApiClient myGoogleClient;
     private Location previousLocation, currentLocation;
     private long previousTime, currentTime;
+    private double currentSpeed;
 
     //Set this to true if you want dummy values instead of actual values
     private static boolean dummyValues = false;
@@ -35,6 +36,8 @@ public class GPSLocation
 
         previousTime = Calendar.getInstance().getTimeInMillis();
         currentTime = Calendar.getInstance().getTimeInMillis();
+
+        currentSpeed = 0;
 
         if (dummyValues)
         {
@@ -103,5 +106,17 @@ public class GPSLocation
     public long timeSinceLast()
     {
         return currentTime - previousTime;
+    }
+
+    //Get (and set) the speed in kmph
+    private double getSpeed()
+    {
+        double timeInHours = (timeSinceLast() / 1000) / 3600;
+
+        double distanceInKilos = distanceCovered() / 1000;
+
+        currentSpeed = distanceInKilos/timeInHours;
+
+        return currentSpeed;
     }
 }
