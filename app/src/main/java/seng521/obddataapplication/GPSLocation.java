@@ -27,25 +27,24 @@ public class GPSLocation
                        GoogleApiClient.ConnectionCallbacks callbackListener,
                        GoogleApiClient.OnConnectionFailedListener failedListener)
     {
-        myGoogleClient = new GoogleApiClient.Builder(cont)
-                .addConnectionCallbacks(callbackListener)
-                .addOnConnectionFailedListener(failedListener)
-                .addApi(LocationServices.API)
-                .build();
-        myGoogleClient.connect();
-
         previousTime = Calendar.getInstance().getTimeInMillis();
         currentTime = Calendar.getInstance().getTimeInMillis();
-
         currentSpeed = 0;
 
         if (dummyValues)
-        {
+        {   //GPS coordinates near university
             currentLocation.setLatitude(51.081468);
             currentLocation.setLongitude(-114.130640);
         }
         else
         {
+            myGoogleClient = new GoogleApiClient.Builder(cont)
+                    .addConnectionCallbacks(callbackListener)
+                    .addOnConnectionFailedListener(failedListener)
+                    .addApi(LocationServices.API)
+                    .build();
+            myGoogleClient.connect();
+
             currentLocation = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient);
         }
     };
@@ -61,6 +60,8 @@ public class GPSLocation
         {
             currentLocation.setLatitude(currentLocation.getLatitude() + 0.0001);
             currentLocation.setLongitude(currentLocation.getLongitude() - 0.0001);
+
+            return;
         }
 
         currentLocation = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient);
@@ -90,6 +91,7 @@ public class GPSLocation
         }
     }
 
+    //Get's the distance between the previous and cufrent locations in metres
     public float distanceCovered()
     {
         if (currentLocation != null && previousLocation != null)
@@ -109,7 +111,7 @@ public class GPSLocation
     }
 
     //Get (and set) the speed in kmph
-    private double getSpeed()
+    public double getSpeed()
     {
         double timeInHours = (timeSinceLast() / 1000) / 3600;
 
