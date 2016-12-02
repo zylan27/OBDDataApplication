@@ -1,99 +1,86 @@
 package seng521.obddataapplication;
 
-import android.app.Service;
-import android.location.LocationListener;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import android.content.Context;
 import android.location.Location;
-import android.location.LocationManager;
-import android.os.IBinder;
-import android.os.Bundle;
-import android.content.Intent;
+import java.util.Calendar;
 
 /**
  * Created by Jonathan on 2016-11-28.
  */
 
-public class GPSLocation extends Service implements LocationListener {
-    //private final Context mContext;
 
-    private static final int MIN_UPDATE_DISTANCE = 5; // 10 meters
-    private static final int MIN_UPDATE_TIME = 1000; // 1 second
+public class GPSLocation
+{
+    private GoogleApiClient myGoogleClient;
+    private Location previousLocation, currentLocation;
+    private long previousTime, currentTime;
 
-    boolean isGPSEnabled = false;
-    boolean isNetworkEnabled = false;
-    boolean canGetLocation = false;
+    public GPSLocation(){}
 
-    Location location; // location
-    double latitude; // latitude
-    double longitude; // longitude
+    public GPSLocation(Context cont,
+                       GoogleApiClient.ConnectionCallbacks callbackListener,
+                       GoogleApiClient.OnConnectionFailedListener failedListener)
+    {
+        myGoogleClient = new GoogleApiClient.Builder(cont)
+                .addConnectionCallbacks(callbackListener)
+                .addOnConnectionFailedListener(failedListener)
+                .addApi(LocationServices.API)
+                .build();
+        myGoogleClient.connect();
 
-    // Declaring a Location Manager
-    protected LocationManager locationManager;
+        previousTime = Calendar.getInstance().getTimeInMillis();
+        currentTime = Calendar.getInstance().getTimeInMillis();
+    };
 
-    public GPSLocation(/*Context context*/) {
-        //this.mContext = context;
-        getLocation();
+    public void getLocation()
+    {
+        previousLocation = currentLocation;
+        previousTime = currentTime;
+        currentLocation = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient);
+        currentTime = Calendar.getInstance().getTimeInMillis();
     }
 
-    public Location getLocation() {
-        try {
-            /*locationManager = (LocationManager) mContext
-                    .getSystemService(LOCATION_SERVICE);
-*/
-            // getting GPS status
-            isGPSEnabled = locationManager
-                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-            if (!isGPSEnabled) {
-                // no network provider is enabled
-            } else {
-                this.canGetLocation = true;
-                // First get location from Network Provider
-
-                // if GPS Enabled get lat/long using GPS Services
-                if (isGPSEnabled) {
-                    if (location == null) {
-                        locationManager.requestLocationUpdates(
-                                LocationManager.GPS_PROVIDER,
-                                MIN_UPDATE_TIME,
-                                MIN_UPDATE_DISTANCE, this);
-                        //Log.d("GPS Enabled", "GPS Enabled");
-                        if (locationManager != null) {
-                            location = locationManager
-                                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                            if (location != null) {
-                                latitude = location.getLatitude();
-                                longitude = location.getLongitude();
-                            }
-                        }
-                    }
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+    public double getLatitude()
+    {
+        if (currentLocation != null)
+        {
+            return currentLocation.getLatitude();
         }
-
-        return location;
+        else
+        {
+            return 1001;
+        }
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
+    public double getLongitude()
+    {
+        if (currentLocation != null)
+        {
+            return currentLocation.getLongitude();
+        }
+        else
+        {
+            return 1001;
+        }
     }
 
-    @Override
-    public void onProviderDisabled(String provider) {
+    public float distanceCovered()
+    {
+        if (currentLocation != null && previousLocation != null)
+        {
+            return previousLocation.distanceTo(currentLocation);
+        }
+        else
+        {
+            return 0;
+        }
     }
 
-    @Override
-    public void onProviderEnabled(String provider) {
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-    }
-
-    @Override
-    public IBinder onBind(Intent arg0) {
-        return null;
+    //Return the time interval in milliseconds between retrieval of current location and the time before
+    public long timeSinceLast()
+    {
+        return currentTime - previousTime;
     }
 }
