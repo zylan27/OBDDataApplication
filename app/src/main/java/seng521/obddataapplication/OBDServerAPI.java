@@ -28,14 +28,14 @@ public interface OBDServerAPI {
     Call<List<Trip>> getTrips();
 
 
-    @Headers({"type: phone"})
-    @GET("/trip")
+//    @Headers({"type: phone"})
+    @GET("/getPhoneTrip")
     Call<List<RecordedData>> getPhoneData(@Header("tripID") String tripID);
 
 
-    @Headers({"type: OBD"})
-    @GET("/trip")
-    Call<List<ObdData>> getObdData(@Query("tripID") String tripId);
+ //   @Headers({"type: OBD"})
+    @GET("/getOBDTrip")
+    Call<List<ObdData>> getObdData(@Header("tripID") String tripId);
 
 
 
