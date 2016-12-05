@@ -32,7 +32,8 @@ public class RecordedData {
 
     @Override
     public String toString() {
-        String returnString = "Time: " + timeStamp
+        Date time=new Date(Long.parseLong(timeStamp)*(long)1000);
+        String returnString = "Time: " + time
                 + "\nLatitude: " + latitude
                 + "\nLongitude: " + longitude
                 + "\nSpeed: " + speed;
