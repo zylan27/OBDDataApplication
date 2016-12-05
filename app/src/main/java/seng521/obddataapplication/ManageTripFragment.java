@@ -1,9 +1,11 @@
 package seng521.obddataapplication;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -141,7 +143,7 @@ public class ManageTripFragment extends Fragment {
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     // use response.code, response.headers, etc.
                     Log.d("myTag", "End Trip: Success");
-                    dataTask.cancel(true);
+                    dataTask.cancel(false);
                 }
 
                 @Override
@@ -186,7 +188,11 @@ public class ManageTripFragment extends Fragment {
                 }
             });
 
-            dataTask.execute(getContext());
+            if ( (GPSLocation.dummyValues == true) ||
+                 (ContextCompat.checkSelfPermission( this.getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED) )
+            {
+                dataTask.execute(getContext());
+            }
         }
     }
 

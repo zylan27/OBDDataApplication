@@ -1,11 +1,8 @@
 package seng521.obddataapplication;
 
 import android.content.Context;
-import android.icu.util.Calendar;
 import android.os.AsyncTask;
 import android.util.Log;
-
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import retrofit2.Response;
 import retrofit2.Retrofit;

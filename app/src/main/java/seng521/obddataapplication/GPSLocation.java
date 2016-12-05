@@ -4,8 +4,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.util.Calendar;
@@ -20,25 +22,27 @@ public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleA
     private GoogleApiClient myGoogleClient;
     private double currentSpeed, previousLatitude, previousLongitude, currentLatitude, currentLongitude;
     private long previousTime, currentTime;
+    Context thisContext;
 
     //Set this to true if you want dummy values instead of actual values
-    private static boolean dummyValues = true;
-    private static long timeOffset = (9 * 60 * 1000) + 12000;
+    protected static boolean dummyValues = true;
+    private static long timeOffset = (0 * 60 * 1000) + 12000;
     //private static long timeOffset = 0;
 
     public GPSLocation(){}
 
     public GPSLocation(Context cont)
     {
+        thisContext = cont;
         previousTime = Calendar.getInstance().getTimeInMillis() + timeOffset;
         currentTime = Calendar.getInstance().getTimeInMillis() + timeOffset;
-        Log.d("asdf", Long.toString(timeOffset));
+        Log.d("Time Offset: ", Long.toString(timeOffset));
         currentSpeed = 0;
 
         if (dummyValues)
         {   //GPS coordinates near university
-            previousLatitude = 51.081468;
-            previousLongitude = -114.130640;
+            previousLatitude = 51.081467;
+            previousLongitude = -114.130641;
             currentLatitude = 51.081468;
             currentLongitude = -114.130640;
         }
@@ -50,9 +54,18 @@ public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleA
                     .addApi(LocationServices.API)
                     .build();
             myGoogleClient.connect();
-
-            currentLatitude = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient).getLatitude();
-            currentLongitude = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient).getLongitude();
+            if (ContextCompat.checkSelfPermission( cont, android.Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED)
+            {
+                currentLatitude = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient).getLatitude();
+                currentLongitude = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient).getLongitude();
+            }
+            else
+            {
+                previousLatitude = 51.081467;
+                previousLongitude = -114.130641;
+                currentLatitude = 51.081468;
+                currentLongitude = -114.130640;
+            }
         }
     };
 
@@ -72,8 +85,12 @@ public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleA
             return;
         }
 
-        currentLatitude = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient).getLatitude();
-        currentLongitude = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient).getLongitude();
+        if (ContextCompat.checkSelfPermission( thisContext, android.Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED)
+        {
+            currentLatitude = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient).getLatitude();
+            currentLongitude = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient).getLongitude();
+        }
+
         setSpeed();
         return;
     }
@@ -111,9 +128,13 @@ public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleA
 
     private void setSpeed()
     {
-        double timeInHours = (timeSinceLast() / 1000) / 3600;
-        double distanceInKilos = distanceCovered() / 1000;
-        currentSpeed = distanceInKilos/timeInHours;
+        double speedCalc = 0;
+        speedCalc = distanceCovered() / timeSinceLast();    // m/ms
+        speedCalc *= 1000;  // m/s
+        speedCalc *= 3600;  // m/hr
+        speedCalc /= 1000;  // km/hr
+
+        currentSpeed = speedCalc;
     }
 
     //Get (and set) the speed in kmph
