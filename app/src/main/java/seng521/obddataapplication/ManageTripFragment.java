@@ -160,6 +160,7 @@ public class ManageTripFragment extends Fragment {
         }
         else
         {
+            dataTask = new RecordDataTask();
             started = !started;
             setRecordText(view, getString(R.string.end_record));
 
