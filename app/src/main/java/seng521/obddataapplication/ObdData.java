@@ -25,7 +25,8 @@ public class ObdData {
 
     @Override
     public String toString() {
-        String returnString = "Time: " + timeStamp
+        Date time=new Date(Long.parseLong(timeStamp)*(long)1000);
+        String returnString = "Time: " + time
                 +  "\n Errors: ";
         if(errors.length==0){
             returnString+="None";
@@ -33,7 +34,10 @@ public class ObdData {
             for(int i=0; i<errors.length; i++){
                 returnString+=errors[i]+", ";
             }
+            //remove last comma
+            returnString=returnString.substring(0,returnString.length()-2);
         }
+
         return returnString;
     }
 }
