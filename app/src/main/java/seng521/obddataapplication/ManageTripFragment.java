@@ -34,6 +34,7 @@ public class ManageTripFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private boolean started = false;
+    private RecordDataTask dataTask = new RecordDataTask();
     public ManageTripFragment() {
         // Required empty public constructor
     }
@@ -140,7 +141,7 @@ public class ManageTripFragment extends Fragment {
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     // use response.code, response.headers, etc.
                     Log.d("myTag", "End Trip: Success");
-
+                    dataTask.cancel(true);
                 }
 
                 @Override
@@ -152,6 +153,7 @@ public class ManageTripFragment extends Fragment {
 
                 }
             });
+
 
         }
         else
@@ -184,41 +186,7 @@ public class ManageTripFragment extends Fragment {
                 }
             });
 
-            //Testing uploading data
-            Retrofit retrofitLoop = new Retrofit.Builder()
-                    .baseUrl(getString(R.string.server_address))
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
-            GPSLocation myGPS = new GPSLocation(getContext());
-
-            RecordedData currentData = new RecordedData(Long.toString(myGPS.getCurrentUnixTimeStamp()),
-                                                        Double.toString(myGPS.getLatitude()),
-                                                        Double.toString(myGPS.getLongitude()),
-                                                        Double.toString(myGPS.getSpeed())
-                                                    );
-
-            OBDServerAPI apiService2 = retrofitLoop.create(OBDServerAPI.class);
-            Log.d("myTag", currentData.toJSON());
-            Call<ResponseBody> phoneRequest = apiService2.addRecord(currentData.toJSON());
-            phoneRequest.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    // use response.code, response.headers, etc.
-                    Log.d("myTag", "Uploading phone data");
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    // handle failure
-                    Log.d("myTag", "Failed uploading data");
-                    String message = t.getMessage();
-                    Log.d("Failure", message);
-
-                }
-            });
-
-
+            dataTask.execute(getContext());
         }
     }
 

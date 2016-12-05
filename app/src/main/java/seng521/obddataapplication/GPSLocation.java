@@ -6,6 +6,7 @@ import com.google.android.gms.location.LocationServices;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.Calendar;
 
@@ -22,14 +23,16 @@ public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleA
 
     //Set this to true if you want dummy values instead of actual values
     private static boolean dummyValues = true;
-    private static long timeOffset = (4 * 60 * 1000) + 25000;
+    private static long timeOffset = (9 * 60 * 1000) + 12000;
+    //private static long timeOffset = 0;
 
     public GPSLocation(){}
 
     public GPSLocation(Context cont)
     {
-        previousTime = Calendar.getInstance().getTimeInMillis();
+        previousTime = Calendar.getInstance().getTimeInMillis() + timeOffset;
         currentTime = Calendar.getInstance().getTimeInMillis() + timeOffset;
+        Log.d("asdf", Long.toString(timeOffset));
         currentSpeed = 0;
 
         if (dummyValues)
