@@ -217,6 +217,8 @@ public class ManageTripFragment extends Fragment {
 
                 }
             });
+
+
         }
     }
 

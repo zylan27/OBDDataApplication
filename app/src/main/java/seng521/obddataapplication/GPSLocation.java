@@ -22,13 +22,14 @@ public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleA
 
     //Set this to true if you want dummy values instead of actual values
     private static boolean dummyValues = true;
+    private static long timeOffset = (4 * 60 * 1000) + 25000;
 
     public GPSLocation(){}
 
     public GPSLocation(Context cont)
     {
         previousTime = Calendar.getInstance().getTimeInMillis();
-        currentTime = Calendar.getInstance().getTimeInMillis() + (4 * 60 * 1000) + 25000;
+        currentTime = Calendar.getInstance().getTimeInMillis() + timeOffset;
         currentSpeed = 0;
 
         if (dummyValues)
@@ -58,7 +59,7 @@ public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleA
         previousLongitude = currentLongitude;
 
         previousTime = currentTime;
-        currentTime = Calendar.getInstance().getTimeInMillis() + (4 * 60 * 1000) + 25000;
+        currentTime = Calendar.getInstance().getTimeInMillis() + timeOffset;
 
         if (dummyValues)
         {

@@ -24,37 +24,39 @@ public class RecordDataTask extends AsyncTask<Context, Void, Void>
     {
         Context activityContext = cont[0];
 
-        GoogleApiClient.ConnectionCallbacks callbackListener;
-        GoogleApiClient.OnConnectionFailedListener failedListener;
+        GPSLocation myGPS = new GPSLocation(activityContext);
+
+        Retrofit retrofitLoop = new Retrofit.Builder()
+                .baseUrl(activityContext.getString(R.string.server_address))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        OBDServerAPI apiService = retrofitLoop.create(OBDServerAPI.class);
 
         while(!isCancelled())
-        {/*
-            GPSLocation myGPS = new GPSLocation(activityContext, callbackListener, failedListener);
+        {
+            myGPS.getLocation();
 
-            RecordedData myData = new RecordedData(Calendar.getInstance().getTime(),
-                                                    myGPS.getLatitude(),
-                                                    myGPS.getLongitude(),
-                                                    myGPS.getSpeed()
-                                                    );
-*/
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(activityContext.getString(R.string.server_address))
-                    .build();
+            RecordedData currentData = new RecordedData(Long.toString(myGPS.getCurrentUnixTimeStamp()),
+                    Double.toString(myGPS.getLatitude()),
+                    Double.toString(myGPS.getLongitude()),
+                    Double.toString(myGPS.getSpeed())
+            );
 
-            OBDServerAPI apiService = retrofit.create(OBDServerAPI.class);
-            Call<ResponseBody> endResponse = apiService.endTrip();
-            endResponse.enqueue(new Callback<ResponseBody>() {
+
+            Log.d("myTag", currentData.toJSON());
+            Call<ResponseBody> phoneRequest = apiService.addRecord(currentData.toJSON());
+            phoneRequest.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     // use response.code, response.headers, etc.
-                    Log.d("myTag", "End Trip: Success");
-
+                    Log.d("myTag", "Uploading phone data");
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     // handle failure
-                    Log.d("myTag", "End Trip: Failed");
+                    Log.d("myTag", "Failed uploading data");
                     String message = t.getMessage();
                     Log.d("Failure", message);
 
