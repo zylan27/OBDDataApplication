@@ -28,19 +28,15 @@ public interface OBDServerAPI {
     Call<List<Trip>> getTrips();
 
 
-//    @Headers({"type: phone"})
     @GET("/getPhoneTrip")
     Call<List<RecordedData>> getPhoneData(@Header("tripID") String tripID);
 
-
- //   @Headers({"type: OBD"})
     @GET("/getOBDTrip")
     Call<List<ObdData>> getObdData(@Header("tripID") String tripId);
 
-
-
+    @Headers({"Content-Type: application/x-www-form-urlencoded"})
     @POST("/addPhoneRecords")
-    Call<ResponseBody> addRecord(@Body Trip trip);
+    Call<ResponseBody> addRecord(@Body String data);
 
 
 }

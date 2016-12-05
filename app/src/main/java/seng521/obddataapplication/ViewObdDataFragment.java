@@ -36,16 +36,17 @@ public class ViewObdDataFragment extends Fragment {
         return fragment;
     }
 
+    private ListView obdDataList;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    private ListView obdDataList;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_obd_data, container, false);
 
         obdDataList = (ListView) view.findViewById(R.id.obdDataList);
@@ -86,7 +87,7 @@ public class ViewObdDataFragment extends Fragment {
             @Override
             public void onFailure(Call<List<ObdData>> call, Throwable t) {
                 // handle failure
-                Log.d("myTag", "Get Phone Data: Failed");
+                Log.d("myTag", "Get OBD Data: Failed");
                 String message = t.getMessage();
                 Log.d("Failure", message);
 

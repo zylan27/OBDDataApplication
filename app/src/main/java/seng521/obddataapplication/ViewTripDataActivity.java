@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -100,8 +101,10 @@ public class ViewTripDataActivity extends AppCompatActivity
             switch (position)
             {
                 case 0:
+                    Log.d("myTag", "New Phone Data fragment instance");
                     return ViewPhoneDataFragment.newInstance();
                 case 1:
+                    Log.d("myTag", "New OBD Data fragment instance");
                     return ViewObdDataFragment.newInstance();
             }
             return null;

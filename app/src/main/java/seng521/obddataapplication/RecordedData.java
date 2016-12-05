@@ -8,21 +8,22 @@ import java.util.Date;
 
 public class RecordedData {
 
-    private Date timestamp;
-    private double latitude; // y-coordinate
-    private double longitude; // x-coordinate
-    private double speed;
+    private String timeStamp;
+    private String latitude; // y-coordinate
+    private String longitude; // x-coordinate
+    private String speed;
+
     private String _id;
 
-    public RecordedData(Date timestamp, double latitude, double longitude, double speed) {
-        this.timestamp = timestamp;
+    public RecordedData(String timeStamp, String latitude, String longitude, String speed) {
+        this.timeStamp = timeStamp;
         this.latitude = latitude;
         this.longitude = longitude;
         this.speed = speed;
     }
 
-    public RecordedData(Date timestamp, double latitude, double longitude, double speed, String _id) {
-        this.timestamp = timestamp;
+    public RecordedData(String timeStamp, String latitude, String longitude, String speed, String _id) {
+        this.timeStamp = timeStamp;
         this.latitude = latitude;
         this.longitude = longitude;
         this.speed = speed;
@@ -31,10 +32,21 @@ public class RecordedData {
 
     @Override
     public String toString() {
-        String string = "Time: " + timestamp.toString()
-                + "\nLatitude: " + Double.toString(latitude)
-                + "\nLongitude: " + Double.toString(longitude)
-                + "\nSpeed: " + Double.toString(speed);
-        return string;
+        String returnString = "Time: " + timeStamp
+                + "\nLatitude: " + latitude
+                + "\nLongitude: " + longitude
+                + "\nSpeed: " + speed;
+        return returnString;
+    }
+
+    public String toJSON() {
+        String returnString =
+                "{ \"records\": [{" +
+                "\"timeStamp\": \"" + timeStamp + "\", " +
+                "\"latitude\": \"" + latitude + "\", " +
+                "\"longitude\": \"" + longitude + "\", " +
+                "\"speed\": \"" + speed + "\" " +
+                "}]}";
+        return returnString;
     }
 }
