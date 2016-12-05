@@ -6,6 +6,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
@@ -34,9 +36,10 @@ public interface OBDServerAPI {
     @GET("/getOBDTrip")
     Call<List<ObdData>> getObdData(@Header("tripID") String tripId);
 
+    @FormUrlEncoded
     @Headers({"Content-Type: application/x-www-form-urlencoded"})
     @POST("/addPhoneRecords")
-    Call<ResponseBody> addRecord(@Body String data);
+    Call<ResponseBody> addRecord(@Field("data") String data);
 
 
 }

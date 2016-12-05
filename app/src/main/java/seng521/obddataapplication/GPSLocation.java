@@ -28,7 +28,7 @@ public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleA
     public GPSLocation(Context cont)
     {
         previousTime = Calendar.getInstance().getTimeInMillis();
-        currentTime = Calendar.getInstance().getTimeInMillis() + 5000;
+        currentTime = Calendar.getInstance().getTimeInMillis() + (4 * 60 * 1000) + 25000;
         currentSpeed = 0;
 
         if (dummyValues)
@@ -58,7 +58,7 @@ public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleA
         previousLongitude = currentLongitude;
 
         previousTime = currentTime;
-        currentTime = Calendar.getInstance().getTimeInMillis();
+        currentTime = Calendar.getInstance().getTimeInMillis() + (4 * 60 * 1000) + 25000;
 
         if (dummyValues)
         {
