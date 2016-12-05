@@ -66,6 +66,8 @@ public class RecordDataTask extends AsyncTask<Context, Void, Void>
                 e.printStackTrace();
             }
         }
+
+        if (myGPS.myGoogleClient.isConnected()) myGPS.myGoogleClient.disconnect();
         return null;
     }
 }

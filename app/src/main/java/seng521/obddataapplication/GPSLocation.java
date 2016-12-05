@@ -19,14 +19,14 @@ import java.util.Calendar;
 
 public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
 {
-    private GoogleApiClient myGoogleClient;
+    protected GoogleApiClient myGoogleClient;
     private double currentSpeed, previousLatitude, previousLongitude, currentLatitude, currentLongitude;
     private long previousTime, currentTime;
     Context thisContext;
 
     //Set this to true if you want dummy values instead of actual values
     protected static boolean dummyValues = true;
-    private static long timeOffset = (0 * 60 * 1000) + 12000;
+    private static long timeOffset = (1 * 60 * 1000) + 12000;
     //private static long timeOffset = 0;
 
     public GPSLocation(){}
@@ -53,9 +53,10 @@ public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleA
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
-            myGoogleClient.connect();
+
             if (ContextCompat.checkSelfPermission( cont, android.Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED)
             {
+                if (!myGoogleClient.isConnected()) myGoogleClient.connect();
                 currentLatitude = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient).getLatitude();
                 currentLongitude = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient).getLongitude();
             }
