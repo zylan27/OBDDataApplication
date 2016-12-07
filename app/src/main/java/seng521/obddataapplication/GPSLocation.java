@@ -12,6 +12,8 @@ import android.util.Log;
 
 import java.util.Calendar;
 
+import retrofit2.http.Path;
+
 /**
  * Created by Jonathan on 2016-11-28.
  */
@@ -25,7 +27,7 @@ public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleA
     Context thisContext;
 
     //Set this to true if you want dummy values instead of actual values
-    protected static boolean dummyValues = true;
+    protected static boolean dummyValues = false;
     private static long timeOffset = (1 * 60 * 1000) + 12000;
     //private static long timeOffset = 0;
 
@@ -57,8 +59,14 @@ public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleA
             if (ContextCompat.checkSelfPermission( cont, android.Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED)
             {
                 if (!myGoogleClient.isConnected()) myGoogleClient.connect();
-                currentLatitude = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient).getLatitude();
-                currentLongitude = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient).getLongitude();
+                Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient);
+
+                if(lastLocation!=null)
+                {
+                    currentLatitude = lastLocation.getLatitude();
+                    currentLongitude = lastLocation.getLongitude();
+                }
+
             }
             else
             {
@@ -88,8 +96,12 @@ public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleA
 
         if (ContextCompat.checkSelfPermission( thisContext, android.Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED)
         {
-            currentLatitude = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient).getLatitude();
-            currentLongitude = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient).getLongitude();
+            Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient);
+            if(lastLocation != null)
+            {
+                currentLatitude = lastLocation.getLatitude();
+                currentLongitude = lastLocation.getLongitude();
+            }
         }
 
         setSpeed();
