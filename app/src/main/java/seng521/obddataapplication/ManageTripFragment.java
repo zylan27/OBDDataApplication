@@ -143,7 +143,7 @@ public class ManageTripFragment extends Fragment {
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     // use response.code, response.headers, etc.
                     Log.d("myTag", "End Trip: Success");
-                    dataTask.cancel(false);
+                    if (dataTask != null) dataTask.cancel(false);
                 }
 
                 @Override
@@ -160,7 +160,6 @@ public class ManageTripFragment extends Fragment {
         }
         else
         {
-            dataTask = new RecordDataTask();
             started = !started;
             setRecordText(view, getString(R.string.end_record));
 
@@ -192,6 +191,7 @@ public class ManageTripFragment extends Fragment {
             if ( (GPSLocation.dummyValues == true) ||
                  (ContextCompat.checkSelfPermission( this.getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED) )
             {
+                dataTask = new RecordDataTask();
                 dataTask.execute(getContext());
             }
         }

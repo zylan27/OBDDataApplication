@@ -2,10 +2,13 @@ package seng521.obddataapplication;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -19,12 +22,15 @@ import retrofit2.http.Path;
  */
 
 
-public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
+public class GPSLocation implements LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
 {
     protected GoogleApiClient myGoogleClient;
     private double currentSpeed, previousLatitude, previousLongitude, currentLatitude, currentLongitude;
     private long previousTime, currentTime;
+    private Location currentLocation;
     Context thisContext;
+
+    //LocationManager lm = (LocationManager)thisContext.getSystemService(thisContext.LOCATION_SERVICE);
 
     //Set this to true if you want dummy values instead of actual values
     protected static boolean dummyValues = false;
@@ -59,12 +65,22 @@ public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleA
             if (ContextCompat.checkSelfPermission( cont, android.Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED)
             {
                 if (!myGoogleClient.isConnected()) myGoogleClient.connect();
-                Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient);
 
-                if(lastLocation!=null)
+                if (myGoogleClient.isConnected())
                 {
-                    currentLatitude = lastLocation.getLatitude();
-                    currentLongitude = lastLocation.getLongitude();
+                    LocationRequest lr = LocationRequest.create()
+                            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                            .setInterval(1 * 1000)        // 1 second, in milliseconds
+                            .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+
+                    LocationServices.FusedLocationApi.requestLocationUpdates(myGoogleClient, lr, this);
+                    currentLocation = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient);
+                }
+
+                if(currentLocation!=null)
+                {
+                    currentLatitude = currentLocation.getLatitude();
+                    currentLongitude = currentLocation.getLongitude();
                 }
 
             }
@@ -96,11 +112,23 @@ public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleA
 
         if (ContextCompat.checkSelfPermission( thisContext, android.Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED)
         {
-            Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient);
-            if(lastLocation != null)
+            if (!myGoogleClient.isConnected()) myGoogleClient.connect();
+
+            if (myGoogleClient.isConnected())
             {
-                currentLatitude = lastLocation.getLatitude();
-                currentLongitude = lastLocation.getLongitude();
+                LocationRequest lr = LocationRequest.create()
+                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                    .setInterval(1 * 1000)        // 1 second, in milliseconds
+                    .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+
+                LocationServices.FusedLocationApi.requestLocationUpdates(myGoogleClient, lr, this);
+                currentLocation = LocationServices.FusedLocationApi.getLastLocation(myGoogleClient);
+            }
+
+            if(currentLocation != null)
+            {
+                currentLatitude = currentLocation.getLatitude();
+                currentLongitude = currentLocation.getLongitude();
             }
         }
 
@@ -170,4 +198,15 @@ public class GPSLocation implements GoogleApiClient.ConnectionCallbacks, GoogleA
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        // Called when a new location is found by the network location provider.
+    }
+
+    public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+    public void onProviderEnabled(String provider) {}
+
+    public void onProviderDisabled(String provider) {}
 }
